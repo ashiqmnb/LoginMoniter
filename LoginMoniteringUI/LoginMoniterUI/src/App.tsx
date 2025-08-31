@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./pages/Login";
 import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import HomePage from "./pages/HomePage";
@@ -11,6 +10,8 @@ import GeoLocationsPage from "./pages/GeoLocationsPage";
 import BlackListPage from "./pages/BlackListPage";
 import CaptchaForm from "./pages/CaptchaForm";
 import RiskLevelsPage from "./pages/RiskLevelsPage";
+// import Login from "./pages/Login";
+import OctaLogin from "./pages/OctaLogin";
 
 
 
@@ -18,7 +19,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<OctaLogin />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/verify-otp" element={<OtpPage />} />
         <Route path="/captcha" element={<CaptchaForm />} />

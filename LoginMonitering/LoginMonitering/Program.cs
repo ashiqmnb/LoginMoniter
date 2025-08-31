@@ -63,30 +63,60 @@ namespace LoginMonitering
             });
 
 
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(o =>
-            {
-                var jwtKey = builder.Configuration["Jwt:SecretKey"];
+            // Choose Authentication based on config
+            var authProvider = builder.Configuration["AuthenticationProvider"];
 
-                if (string.IsNullOrEmpty(jwtKey))
-                {
-                    throw new Exception("JWT key is missing from environment variables.");
-                }
+            if(authProvider == "Okta")
+            {
+                var oktaDomain = builder.Configuration["Okta:Domain"];
+                var issuer = builder.Configuration["Okta:Issuer"];
+                var audience = builder.Configuration["Okta:Audience"];
 
-                o.TokenValidationParameters = new TokenValidationParameters
+                builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.Authority = issuer;
+                        options.Audience = audience;
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateLifetime = true
+                        };
+                    });
+            }
+            else
+            {
+                builder.Services.AddAuthentication(options =>
                 {
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true
-                };
-            });
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(o =>
+                {
+                    var jwtKey = builder.Configuration["Jwt:SecretKey"];
+
+                    if (string.IsNullOrEmpty(jwtKey))
+                    {
+                        throw new Exception("JWT key is missing from environment variables.");
+                    }
+
+                    o.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true
+                    };
+                });
+            }
+
+
+
+
+            
 
             // Cors Added
             builder.Services.AddCors(options =>

@@ -4,10 +4,18 @@ import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useOktaAuth } from "@okta/okta-react";
 
 const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+
+  const { oktaAuth } = useOktaAuth();
+  
+
+  const handleOktaLogin = async () => {
+    await oktaAuth.signInWithRedirect({ originalUri: "/home" });
+  };
 
   const initialValues = { email: "", password: "" };
 
@@ -154,8 +162,29 @@ const Login = () => {
             </button>
           </Form>
         </Formik>
+
+        {/* Divider */}
+        <div className="flex items-center my-4">
+          <hr className="flex-grow border-gray-300" />
+          <span className="px-2 text-gray-500 text-sm">OR</span>
+          <hr className="flex-grow border-gray-300" />
+        </div>
+
+        {/* Okta Auth Button */}
+        <button
+          onClick={handleOktaLogin}
+          className="w-full py-2 rounded-lg bg-gray-800 text-white hover:bg-gray-900 flex items-center justify-center space-x-2"
+        >
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/8/8e/Okta_logo.png"
+            alt="Okta"
+            className="h-5"
+          />
+          <span>Login with Okta</span>
+        </button>
       </div>
     </div>
+
   );
 };
 
