@@ -1,0 +1,41 @@
+# ---- Backend (.NET) ----
+bin/
+obj/
+*.user
+*.vs
+*.vscode
+*.suo
+*.userprefs
+*.csproj.user
+*.dbmdl
+*.log
+*.sql
+*.sqlite
+*.mdf
+*.ldf
+appsettings.json
+appsettings.*.json
+
+# ---- Frontend (React / Node) ----
+.env
+node_modules/
+dist/
+build/
+.npm/
+.yarn/
+*.log
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ---- OS / Editor ----
+.DS_Store
+Thumbs.db
+.idea/
+*.iml
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
